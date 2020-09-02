@@ -21,7 +21,7 @@ Flutter es bonito, rapido, productivo y abierto.
 ### Hot reload
 
 * Permite desarrollar una app mientras se ejecuta.
-* Se Reduce hasta 3 veces el tiempo de desarrollo.
+* Se reduce hasta 3 veces el tiempo de desarrollo.
 
 ### Widget
 
