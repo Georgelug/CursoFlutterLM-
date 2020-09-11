@@ -1,11 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import 'package:luchapedia/src/pages/all_fighters.dart';
 
 class HomePage extends StatelessWidget {
-  String urlKemonito =
+  final urlKemonito =
       'https://tolucalabellacd.com/wp-content/uploads/2020/03/Kemonito-manda-mensaje-ante-la-situaci%C3%B3n-del-coronavirus-805x603.jpg';
-  String bioK =
+  final bioK =
       "Kemonito nacio el 3 de julio de 1967, es un icono de la lucha libre profecional mexicano, actualmente trabaja para la empresa Consejo Mundial de Lucha Libre (CMLL).";
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -23,7 +23,14 @@ class HomePage extends StatelessWidget {
   Widget _principal(BuildContext context) => Stack(
         children: [
           Container(
-            color: Colors.purpleAccent[700],
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment(0.0, 0.0),
+                    end: Alignment(0.6, 0.9),
+                    colors: [
+                  Colors.purpleAccent[700],
+                  Colors.deepPurpleAccent[400]
+                ])),
           ),
           Column(
             children: [
@@ -48,15 +55,18 @@ class HomePage extends StatelessWidget {
         child: Container(
           height: 385,
           width: 350,
-          // decoration: BoxDecoration(
-          //     color: Colors.indigo[500],
-          //     borderRadius: BorderRadius.circular(40)),
           child: Stack(
             children: [
-              Image(
-                image: NetworkImage(urlKemonito),
-                width: 350,
-                height: 350,
+              Positioned(
+                top: 5,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10.0),
+                  child: FadeInImage.assetNetwork(
+                    placeholder: 'assets/gifs/loading.gif',
+                    image: urlKemonito,
+                    width: 350,
+                  ),
+                ),
               ),
               Positioned(
                 top: 155,
