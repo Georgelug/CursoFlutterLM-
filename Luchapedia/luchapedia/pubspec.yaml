@@ -45,8 +45,18 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
+  assets:
+    - assets/gifs/loading.gif
+    - assets/luchadores/Angelica.png
+    - assets/luchadores/blueDemon.jpg
+    - assets/luchadores/diosaQuetzal.png
+    - assets/luchadores/elSanto.jpg
+    - assets/luchadores/frijolito.jpg
+    - assets/luchadores/historico.jpg
+    - assets/luchadores/ladyShani.png
+    - assets/luchadores/tiniebla.png
+    - assets/luchadores/masLuchadores.png
+
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

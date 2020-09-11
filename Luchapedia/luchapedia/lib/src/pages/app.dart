@@ -7,7 +7,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       color: Colors.purpleAccent[700],
       debugShowCheckedModeBanner: false,
-      home: Container(child: HomePage()),
+      home: Center(child: Container(child: HomePage())),
     );
   }
 }
