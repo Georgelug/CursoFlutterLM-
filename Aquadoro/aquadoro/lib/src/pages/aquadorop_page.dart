@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 class Aquadoro extends StatefulWidget {
@@ -14,14 +16,25 @@ class Aquadoro extends StatefulWidget {
 class _AquadoroState extends State<Aquadoro> {
   String tipoActividad = "Focus";
   String tiempoPantalla;
-
+  int contador = 0;
+  bool kindActivity = false;
   BuildContext _context;
   double ancho;
 
+  // atributos que dan fucnionalidad del pomodoro
+  int startState = 1;
+  int tConcentracionseg = 0;
+  int tDescansoSeg = 0;
+  bool revisarTiempoCon = false;
+  bool revisarTiempoDes = false;
+
+  bool botonDeshabilitado = false;
+  bool resetDeshabilitado = false;
   @override
   void initState() {
     super.initState();
     tiempoPantalla = '${widget.tConcentracion}';
+    resetDeshabilitado = true;
   }
 
   @override
@@ -49,6 +62,10 @@ class _AquadoroState extends State<Aquadoro> {
           Center(
             child: Column(
               children: [
+                SizedBox(
+                  height: 40,
+                ),
+                _contadorquadoro(),
                 SizedBox(
                   height: 20,
                 ),
@@ -105,7 +122,16 @@ class _AquadoroState extends State<Aquadoro> {
 
   Widget _botones() => Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [_reset(), _focus()],
+        children: [
+          AbsorbPointer(
+            child: _reset(),
+            absorbing: resetDeshabilitado,
+          ),
+          AbsorbPointer(
+            child: _focus(),
+            absorbing: botonDeshabilitado,
+          ),
+        ],
       );
 
   Widget _reset() => RaisedButton(
@@ -122,7 +148,20 @@ class _AquadoroState extends State<Aquadoro> {
             ),
           ],
         ),
-        onPressed: () {},
+        onPressed: () {
+          if (tConcentracionseg > 1) {
+            revisarTiempoCon = true;
+            startState = 1;
+            print('Le diste en reset de focus');
+          } else if (tDescansoSeg > 1) {
+            revisarTiempoCon = true;
+            startState = 1;
+            kindActivity = false;
+            tipoActividad = 'Focus';
+            tiempoPantalla = '${widget.tConcentracion.toString()}';
+            print('Le diste en reset de relax y te regresa a focus');
+          }
+        },
       );
   Widget _focus() => OutlineButton(
       borderSide: BorderSide(
@@ -134,8 +173,129 @@ class _AquadoroState extends State<Aquadoro> {
             tipoActividad,
             style: TextStyle(fontSize: 25, color: Colors.indigo[800]),
           ),
-          Icon(Icons.adjust, size: 25, color: Colors.blue[900]),
+          Icon((kindActivity) ? Icons.adjust : Icons.album,
+              size: 25, color: Colors.blue[900]),
         ],
       ),
-      onPressed: () {});
+      onPressed: () {
+        switch (startState) {
+          case 1:
+            setState(() {
+              botonDeshabilitado = true;
+              resetDeshabilitado = false;
+            });
+            tConcentracionseg = (widget.tConcentracion) * 60;
+            Timer.periodic(Duration(seconds: 1), (t) {
+              setState(() {
+                if (tConcentracionseg < 1 || revisarTiempoCon) {
+                  t.cancel();
+                  revisarTiempoCon = false;
+                  tiempoPantalla = '${widget.tConcentracion.toString()}';
+                  botonDeshabilitado = false;
+                  resetDeshabilitado = true;
+                  if (tConcentracionseg < 1) {
+                    startState = 2;
+                    tipoActividad = "Relax";
+                    kindActivity = true;
+                    tiempoPantalla = '${widget.tRelax.toString()}';
+                  }
+                } else if (tConcentracionseg < 60) {
+                  tiempoPantalla = '$tConcentracionseg';
+                  tConcentracionseg--;
+                } else {
+                  int m = tConcentracionseg ~/ 60;
+                  int s = tConcentracionseg - (60 * m);
+                  tiempoPantalla = (s < 10) ? '$m:0$s' : '$m:$s';
+                  tConcentracionseg--;
+                }
+              });
+            });
+            break;
+          case 2:
+            setState(() {
+              botonDeshabilitado = true;
+              resetDeshabilitado = false;
+            });
+            tDescansoSeg = (widget.tConcentracion) * 60;
+            Timer.periodic(Duration(seconds: 1), (t) {
+              setState(() {
+                if (tDescansoSeg < 1 || revisarTiempoDes) {
+                  t.cancel();
+                  revisarTiempoDes = false;
+                  tiempoPantalla = '${widget.tConcentracion.toString()}';
+                  botonDeshabilitado = false;
+                  resetDeshabilitado = true;
+                  if (tDescansoSeg < 1) {
+                    startState = 2;
+                    tipoActividad = "Focus";
+                    kindActivity = false;
+                    tiempoPantalla = '${widget.tRelax.toString()}';
+                  }
+                } else if (tDescansoSeg < 60) {
+                  tiempoPantalla = '$tDescansoSeg';
+                  tDescansoSeg--;
+                } else {
+                  int m = tDescansoSeg ~/ 60;
+                  int s = tDescansoSeg - (60 * m);
+                  tiempoPantalla = (s < 10) ? '$m:0$s' : '$m:$s';
+                  tDescansoSeg--;
+                }
+              });
+            });
+            break;
+          case 3:
+            setState(() {
+              botonDeshabilitado = true;
+              resetDeshabilitado = false;
+            });
+            tDescansoSeg = (30) * 60;
+            Timer.periodic(Duration(seconds: 1), (t) {
+              setState(() {
+                if (tDescansoSeg < 1 || revisarTiempoDes) {
+                  t.cancel();
+                  revisarTiempoDes = false;
+                  tiempoPantalla = '${widget.tConcentracion.toString()}';
+                  botonDeshabilitado = false;
+                  resetDeshabilitado = true;
+                  if (tDescansoSeg < 1) {
+                    startState = 2;
+                    tipoActividad = "Focus";
+                    kindActivity = false;
+                    tiempoPantalla = '${widget.tRelax.toString()}';
+                  }
+                } else if (tDescansoSeg < 60) {
+                  tiempoPantalla = '$tDescansoSeg';
+                  tDescansoSeg--;
+                } else {
+                  int m = tDescansoSeg ~/ 60;
+                  int s = tDescansoSeg - (60 * m);
+                  tiempoPantalla = (s < 10) ? '$m:0$s' : '$m:$s';
+                  tDescansoSeg--;
+                }
+              });
+            });
+            break;
+        }
+      });
+
+  Widget _contadorquadoro() => (this.contador < 1 || this.contador > 5)
+      ? Container(
+          height: 35,
+        )
+      : Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: _renglon(number: contador),
+        );
+
+  List<Widget> _renglon({int number = 1}) {
+    List<Widget> tmp = [];
+    for (int i = 0; i < number; i++) tmp.add(_reloj());
+    return tmp;
+  }
+
+  Widget _reloj() => Icon(
+        Icons.av_timer,
+        color: Colors.teal[50],
+        size: 45,
+      );
 }

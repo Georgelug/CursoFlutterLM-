@@ -5,6 +5,12 @@ class GoalCard extends StatefulWidget {
   String actividad;
   int tConcentracion;
   int tRelax;
+
+  final AnimationController animationController;
+
+  //Contructor
+  GoalCard({this.animationController});
+
   @override
   _GoalCardState createState() => _GoalCardState();
 }
@@ -14,27 +20,44 @@ class _GoalCardState extends State<GoalCard> {
   @override
   Widget build(BuildContext context) {
     anchoPantalla = MediaQuery.of(context).size.width;
-    return Center(
-      child: Container(
-        margin: EdgeInsets.all(10),
-        decoration: BoxDecoration(
-            color: Color.fromRGBO(223, 255, 255, 1),
-            borderRadius: BorderRadius.circular(15.0)),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _elemento(item: _actividadInput(), porcentaje: 0.45),
-            Spacer(),
-            _elemento(item: _inputConcentracion(), porcentaje: 0.15),
-            Spacer(),
-            _elemento(item: _inputDescanso(), porcentaje: 0.15),
-            Spacer(),
-            _botonFlecha()
-          ],
+    return SizeTransition(
+      axisAlignment: 0.0,
+      sizeFactor: CurvedAnimation(
+        parent: widget.animationController,
+        curve: Curves.linear,
+      ),
+      child: Center(
+        child: Container(
+          margin: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+              color: Color.fromRGBO(223, 255, 255, 1),
+              borderRadius: BorderRadius.circular(15.0)),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _elemento(item: _actividadInput(), porcentaje: 0.45),
+              Spacer(),
+              _elemento(item: _inputConcentracion(), porcentaje: 0.15),
+              Spacer(),
+              _elemento(item: _inputDescanso(), porcentaje: 0.15),
+              Spacer(),
+              _botonFlecha()
+            ],
+          ),
         ),
       ),
     );
   }
+
+  String initialActivity() =>
+      (widget.actividad == null) ? " " : "${widget.actividad.toString()}";
+
+  String initialFocus() => (widget.tConcentracion == null)
+      ? " "
+      : "${widget.tConcentracion.toString()}";
+
+  String initialRelax() =>
+      (widget.tRelax == null) ? " " : "${widget.tRelax.toString()}";
 
   Widget _elemento({Widget item, double porcentaje}) => Container(
         padding: EdgeInsets.only(left: 10, bottom: 13),
@@ -43,6 +66,7 @@ class _GoalCardState extends State<GoalCard> {
       );
 
   Widget _actividadInput() => TextFormField(
+        initialValue: initialActivity(),
         decoration: InputDecoration(
           labelText: 'Actividad',
           labelStyle: TextStyle(fontSize: 13),
@@ -54,6 +78,7 @@ class _GoalCardState extends State<GoalCard> {
       );
 
   Widget _inputConcentracion() => TextFormField(
+        initialValue: initialFocus(),
         keyboardType: TextInputType.numberWithOptions(decimal: true),
         decoration: InputDecoration(
           labelText: 'Focus',
@@ -66,6 +91,7 @@ class _GoalCardState extends State<GoalCard> {
       );
 
   Widget _inputDescanso() => TextFormField(
+        initialValue: initialRelax(),
         keyboardType: TextInputType.numberWithOptions(decimal: true),
         decoration: InputDecoration(
           labelText: 'Relax',
