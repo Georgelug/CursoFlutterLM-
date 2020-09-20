@@ -22,7 +22,7 @@ class GoalspageState extends State<GoalsPage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     this._context = context;
     return Scaffold(
-      appBar: _barraSuperior(),
+      // appBar: _barraSuperior(),
       body: _cuerpo(),
     );
   }
@@ -36,17 +36,19 @@ class GoalspageState extends State<GoalsPage> with TickerProviderStateMixin {
   Widget _cuerpo() => Center(
           child: Stack(
         children: [
-          Container(
-            color: Colors.cyan[600],
-          ),
-          Column(
-            children: [
-              _listaScrolleable(),
-              _botonagregar(),
-              Container(
-                height: 30,
-              ),
-            ],
+          // Container(color: Colors.cyan[600],)
+          _fondoMetas(),
+          SafeArea(
+            child: Column(
+              children: [
+                _fadeText(texto: textoBarra),
+                _listaScrolleable(),
+                _botonagregar(),
+                Container(
+                  height: 30,
+                ),
+              ],
+            ),
           )
         ],
       ));
@@ -130,4 +132,13 @@ class GoalspageState extends State<GoalsPage> with TickerProviderStateMixin {
     for (GoalCard meta in _metas) meta.animationController.dispose();
     super.dispose();
   }
+
+  Widget _fondoMetas() => Container(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(colors: <Color>[
+          Colors.cyan[600],
+          Colors.cyan[500],
+          Colors.cyan[400],
+        ])),
+      );
 }

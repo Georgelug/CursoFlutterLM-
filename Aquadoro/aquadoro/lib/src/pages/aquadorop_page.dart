@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Aquadoro extends StatefulWidget {
   final String actividad;
@@ -16,7 +17,7 @@ class Aquadoro extends StatefulWidget {
 class _AquadoroState extends State<Aquadoro> {
   String tipoActividad = "Focus";
   String tiempoPantalla;
-  int contador = 0;
+  int contador = 4;
   bool kindActivity = false;
   BuildContext _context;
   double ancho;
@@ -42,7 +43,7 @@ class _AquadoroState extends State<Aquadoro> {
     this._context = context;
     this.ancho = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: _barraSuperior(),
+      // appBar: _barraSuperior(),
       body: _cuerpo(),
     );
   }
@@ -53,31 +54,31 @@ class _AquadoroState extends State<Aquadoro> {
         backgroundColor: Colors.cyan[600],
       );
 
-  Widget _cuerpo() => Center(
-          child: Stack(
+  Widget _cuerpo() => Stack(
         children: [
-          Container(
-            color: Colors.cyan[600],
-          ),
-          Center(
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 40,
-                ),
-                _contadorquadoro(),
-                SizedBox(
-                  height: 20,
-                ),
-                _aquadoroStack(),
-                Expanded(child: Container()),
-                _botones(),
-                Expanded(child: Container())
-              ],
+          _fondopomodoro(),
+          SafeArea(
+            child: Center(
+              child: Column(
+                children: [
+                  _nuestraAppBar(context),
+                  SizedBox(
+                    height: 40,
+                  ),
+                  _contadorquadoro(),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  _aquadoroStack(),
+                  Expanded(child: Container()),
+                  _botones(),
+                  Expanded(child: Container())
+                ],
+              ),
             ),
           )
         ],
-      ));
+      );
 
   Widget _aquadoroStack() => Stack(
         children: [
@@ -102,15 +103,15 @@ class _AquadoroState extends State<Aquadoro> {
                   Center(
                     child: Text(
                       tipoActividad,
-                      style:
-                          TextStyle(fontSize: 25, color: Colors.blueGrey[50]),
+                      style: GoogleFonts.overpass(
+                          fontSize: 25, color: Colors.blueGrey[50]),
                     ),
                   ),
                   Center(
                     child: Text(
                       tiempoPantalla,
-                      style:
-                          TextStyle(fontSize: 25, color: Colors.blueGrey[50]),
+                      style: GoogleFonts.overpass(
+                          fontSize: 25, color: Colors.blueGrey[50]),
                     ),
                   )
                 ],
@@ -140,7 +141,8 @@ class _AquadoroState extends State<Aquadoro> {
         child: Row(
           children: [
             Text('Reset',
-                style: TextStyle(fontSize: 25, color: Colors.teal[900])),
+                style: GoogleFonts.overpass(
+                    fontSize: 25, color: Colors.teal[900])),
             Icon(
               Icons.rotate_left,
               size: 25,
@@ -171,7 +173,8 @@ class _AquadoroState extends State<Aquadoro> {
         children: [
           Text(
             tipoActividad,
-            style: TextStyle(fontSize: 25, color: Colors.indigo[800]),
+            style:
+                GoogleFonts.overpass(fontSize: 25, color: Colors.indigo[800]),
           ),
           Icon((kindActivity) ? Icons.adjust : Icons.album,
               size: 25, color: Colors.blue[900]),
@@ -198,6 +201,13 @@ class _AquadoroState extends State<Aquadoro> {
                     tipoActividad = "Relax";
                     kindActivity = true;
                     tiempoPantalla = '${widget.tRelax.toString()}';
+                    if (contador == 4) {
+                      _mostrarAlerta(context);
+                      contador = 5;
+                      tiempoPantalla = '${30}';
+                    } else {
+                      tiempoPantalla = '${widget.tRelax}';
+                    }
                   }
                 } else if (tConcentracionseg < 60) {
                   tiempoPantalla = '$tConcentracionseg';
@@ -225,11 +235,14 @@ class _AquadoroState extends State<Aquadoro> {
                   tiempoPantalla = '${widget.tConcentracion.toString()}';
                   botonDeshabilitado = false;
                   resetDeshabilitado = true;
-                  if (tDescansoSeg < 1) {
-                    startState = 2;
+                  if (tConcentracionseg < 1) {
+                    startState = 1;
                     tipoActividad = "Focus";
                     kindActivity = false;
                     tiempoPantalla = '${widget.tRelax.toString()}';
+                    if (contador < 4) {
+                      contador++;
+                    }
                   }
                 } else if (tDescansoSeg < 60) {
                   tiempoPantalla = '$tDescansoSeg';
@@ -257,11 +270,12 @@ class _AquadoroState extends State<Aquadoro> {
                   tiempoPantalla = '${widget.tConcentracion.toString()}';
                   botonDeshabilitado = false;
                   resetDeshabilitado = true;
-                  if (tDescansoSeg < 1) {
-                    startState = 2;
+                  if (tConcentracionseg < 1) {
+                    startState = 1;
                     tipoActividad = "Focus";
                     kindActivity = false;
                     tiempoPantalla = '${widget.tRelax.toString()}';
+                    contador = 0;
                   }
                 } else if (tDescansoSeg < 60) {
                   tiempoPantalla = '$tDescansoSeg';
@@ -297,5 +311,118 @@ class _AquadoroState extends State<Aquadoro> {
         Icons.av_timer,
         color: Colors.teal[50],
         size: 45,
+      );
+
+  void _mostrarAlerta(BuildContext context) {
+    showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (context) => AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+              backgroundColor: Colors.teal[200],
+              elevation: 25,
+              title: Text(
+                '\t\t\t\tFelicidades',
+                style:
+                    GoogleFonts.overpass(fontSize: 30, color: Colors.blue[900]),
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Has realizado 5 pomodoros seguidos',
+                    style: GoogleFonts.overpass(
+                        fontSize: 20.5, color: Colors.indigo[900]),
+                  ),
+                  Text(
+                    'Te recomendamos divifir esta meta en una mas pequeña para disminuir la carga',
+                    style: GoogleFonts.overpass(
+                        fontSize: 20, color: Colors.indigo[900]),
+                  ),
+                  Text(
+                    "¿Nos tomamos un descanso de 30 minutos?",
+                    style: GoogleFonts.overpass(
+                        fontSize: 20, color: Colors.indigo[900]),
+                  ),
+                  Image.asset(
+                    'assets/AlertImage.png',
+                    fit: BoxFit.cover,
+                    height: 170,
+                  ),
+                ],
+              ),
+              actions: [
+                _buttonAlert(
+                  instruction: 'Subdividir',
+                  func: () {
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  },
+                  gradeColor: 800,
+                ),
+                _buttonAlert(
+                  instruction: 'Descansar',
+                  func: () {
+                    Navigator.pop(context);
+                    setState(() {
+                      startState = 3;
+                      print('Se mando al StartState 3');
+                    });
+                  },
+                  gradeColor: 800,
+                ),
+              ],
+            ));
+  }
+
+  Widget _buttonAlert({dynamic func, int gradeColor, String instruction}) =>
+      FlatButton(
+          onPressed: func,
+          child: Text(
+            instruction,
+            style: GoogleFonts.overpass(
+                fontSize: 24, color: Colors.lightBlue[gradeColor]),
+          ));
+
+  Widget _nuestraAppBar(BuildContext context) => Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _returnButton(),
+          _actividad(),
+          Expanded(child: Container()),
+        ],
+      );
+  Widget _returnButton() => Container(
+        width: 40,
+        child: FlatButton(
+          padding: EdgeInsets.only(right: 10, top: 10),
+          onPressed: () => Navigator.pop(context),
+          child: Icon(
+            Icons.arrow_back_ios,
+            size: 35,
+            color: Colors.cyan[100],
+          ),
+        ),
+      );
+  Widget _actividad() => Expanded(
+        child: Container(
+          padding: EdgeInsets.only(top: 10),
+          child: Text(
+            widget.actividad,
+            style: GoogleFonts.overpass(
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+                color: Colors.cyan[50]),
+          ),
+        ),
+      );
+
+  Widget _fondopomodoro() => Container(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(colors: <Color>[
+          Colors.cyan[400],
+          Colors.cyan[800],
+        ])),
       );
 }
