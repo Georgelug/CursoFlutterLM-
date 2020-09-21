@@ -43,6 +43,7 @@ flutter_launcher_name:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flare_flutter: ^2.0.6
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -59,6 +60,7 @@ flutter:
   assets:
     - assets/Acuadoro.png
     - assets/AlertImage.png
+    - assets/aquadoroo.flr
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
